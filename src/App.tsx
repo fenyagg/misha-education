@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { FC, useState } from 'react';
+import { Layout } from './layout/Layout';
+import { Users } from './components/Users/Users';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+interface User {
+  username: string;
+  department: string;
+  position: string;
+  phone: string;
+  role: string;
 }
 
-export default App;
+export const App: FC = (props) => {
+  const [users, setUsers] = useState<User[]>([
+    {
+      username: 'sdf sdf sdf',
+      department: 'develop',
+      position: 'IOS developer',
+      phone: '',
+      role: 'IOS Developer',
+    },
+  ]);
+  return (
+    <Layout>
+      <Users
+        users={users}
+      />
+    </Layout>
+  );
+};
