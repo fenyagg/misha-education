@@ -11,9 +11,11 @@ import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import { createStyles, makeStyles } from '@material-ui/core/styles';
+// TODO: убирай везде sass
 import classes from './UsersModal.module.sass';
 import { User } from '../../../entries/IUsers';
 
+// TODO: пропсы везде называем по такому шаблону IUsersModalProps и это интерфейс
 type Props = {
   open: boolean;
   onClose: () => void;
@@ -22,6 +24,7 @@ type Props = {
   children?: never;
 };
 const useStyles = makeStyles(() => createStyles({
+  // TODO: стили страшно выглядят, там можно как то проще. Если не найдешь, то сделай обертку у каждого инпута
   root: {
     '& .MuiTextField-root': {
       marginBottom: 20,
@@ -38,14 +41,12 @@ const useStyles = makeStyles(() => createStyles({
       backgroundColor: '#ffffff',
     },
   },
-  test: {
-    padding: 15,
-  },
 }));
 export const UsersModal: FC<Props> = ({
   open, onClose, onSave, editUser,
 }: Props) => {
   const styles = useStyles();
+  // TODO:  Если приходит user на редактирование, дак его и подставь, зачем тебе в каждой строчке проверять
   const [form, setForm] = React.useState<User>({
     id: editUser ? editUser.id : undefined,
     lastName: editUser ? editUser.lastName : '',
@@ -84,11 +85,11 @@ export const UsersModal: FC<Props> = ({
           className={styles.root}
           noValidate
           autoComplete="off"
+          // TODO: не устал везде void писать ?) это не обязательно, у тебя вызываемая функция ничего не возрвщает. Ниже тоже самое
           onSubmit={(event): void => onSubmitHandler(event)}
         >
           <TextField
-            // className={classes.form__textInput}
-            className={styles.test}
+            className={classes.form__textInput}
             value={form.lastName}
             onChange={(event): void => formChangeHandler('lastName', event.target.value)}
             label="Фамилия"

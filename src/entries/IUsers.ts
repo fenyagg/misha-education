@@ -1,5 +1,6 @@
 import { ERole } from './ERules';
 
+// TODO: надо переименовать в IUser
 export interface User {
   id?: string;
   lastName: string;

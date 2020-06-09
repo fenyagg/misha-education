@@ -5,6 +5,7 @@ import { Users } from './components/Users/Users';
 import { User } from './entries/IUsers';
 import { ERole } from './entries/ERules';
 
+// TODO: не используемый интерфейс
 interface Modal {
   open: boolean;
 }
@@ -35,6 +36,7 @@ export const App: FC = () => {
   }
   function deleteUserHandler(user: User): void {
     const oldUsers = users.concat();
+    // TODO filter итак новый массив вернет, concat не нужен
     const newUsers = oldUsers.filter((item) => item.id !== user.id);
     setUsers(newUsers);
   }

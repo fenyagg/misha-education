@@ -5,14 +5,17 @@ import { User } from '../../entries/IUsers';
 import { UsersTable } from './UsersTable/UsersTable';
 import { UsersModal } from './UsersModal/UsersModal';
 
+// TODO: пропсы везде называем по такому шаблону IUsersModalProps и это интерфейс
 interface Props {
   users: User[];
   onSave: (user: User) => void;
+  // TODO: на удаление тебе нужен только id пользователя, не передавай лишних данных
   onDelete: (user: User) => void;
   children?: never;
 }
 
 export const Users: FC<Props> = ({ users, onSave, onDelete }: Props) => {
+  // TODO: open надо переименовать в isOpen. Потому что выглядит как функция
   const [open, setOpen] = React.useState(false);
   const [editUser, setEditUser] = useState<User>();
   const handleOpen = (): void => {
@@ -25,6 +28,7 @@ export const Users: FC<Props> = ({ users, onSave, onDelete }: Props) => {
     onSave(form);
     setEditUser(undefined);
   };
+  // TODO: функция какая то бесполезная получилась, не находишь ?
   const deleteUserHandler = (user: User): void => {
     onDelete(user);
   };
