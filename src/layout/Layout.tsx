@@ -1,11 +1,23 @@
 import React, { FC, ReactNode } from 'react';
-import classes from './Layout.module.sass';
+import { makeStyles } from '@material-ui/core/styles';
 
-// TODO: пропсы везде называем по такому шаблону IUsersModalProps и это интерфейс
-type Props = {
+interface ILayoutProps {
   children: ReactNode;
-};
+}
+export const useStyles = makeStyles({
+  wrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexGrow: 1,
+    width: '100%',
+    height: '100%',
+  },
+});
 
-export const Layout: FC<Props> = ({ children }: Props) => (
-  <div className={classes.wrapper}>{children}</div>
-);
+export const Layout: FC<ILayoutProps> = ({ children }: ILayoutProps) => {
+  const styles = useStyles();
+  return (
+    <div className={styles.wrapper}>{children}</div>
+  );
+};

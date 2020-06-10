@@ -10,56 +10,71 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
-// TODO: убирай везде sass
-import classes from './UsersModal.module.sass';
-import { User } from '../../../entries/IUsers';
+import { makeStyles } from '@material-ui/core/styles';
+import { IUser } from '../../../entries/IUsers';
 
-// TODO: пропсы везде называем по такому шаблону IUsersModalProps и это интерфейс
-type Props = {
+interface IUsersModalProps {
   open: boolean;
   onClose: () => void;
-  onSave: (form: User) => void;
-  editUser?: User;
+  onSave: (form: IUser) => void;
+  editUser?: IUser;
   children?: never;
-};
-const useStyles = makeStyles(() => createStyles({
-  // TODO: стили страшно выглядят, там можно как то проще. Если не найдешь, то сделай обертку у каждого инпута
-  root: {
-    '& .MuiTextField-root': {
-      marginBottom: 20,
-    },
-    '& .MuiFormGroup-root': {
-      marginBottom: 20,
-    },
-    '& .MuiFormControl-root': {
-      width: '100%',
-      marginBottom: 20,
-    },
-    '& #demo-simple-select-outlined-label': {
-      padding: '2px 5px',
-      backgroundColor: '#ffffff',
+}
+export const useStyles = makeStyles({
+  modal: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    '& > [tabindex = "-1"]': {
+      backgroundColor: '#fff',
+      outline: 'none',
+      borderRadius: 5,
+      padding: 20,
+      minWidth: 320,
+      maxWidth: 600,
+      width: 600,
     },
   },
-}));
-export const UsersModal: FC<Props> = ({
+  formControls: {
+    width: '100%',
+    marginBottom: 20,
+  },
+  formControlsDate: {
+    width: '50%',
+    marginBottom: 20,
+  },
+  selectLabel: {
+    padding: '2px 5px',
+    backgroundColor: '#ffffff',
+  },
+  buttons: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    '& > button+button': {
+      marginLeft: 20,
+    },
+  },
+});
+export const UsersModal: FC<IUsersModalProps> = ({
   open, onClose, onSave, editUser,
-}: Props) => {
+}: IUsersModalProps) => {
   const styles = useStyles();
-  // TODO:  Если приходит user на редактирование, дак его и подставь, зачем тебе в каждой строчке проверять
-  const [form, setForm] = React.useState<User>({
-    id: editUser ? editUser.id : undefined,
-    lastName: editUser ? editUser.lastName : '',
-    firstName: editUser ? editUser.firstName : '',
-    secondName: editUser ? editUser.secondName : '',
-    birthday: editUser ? editUser.birthday : moment().format('YYYY-MM-DD'),
-    email: editUser ? editUser.email : '',
-    gender: editUser ? editUser.gender : 'female',
-    department: editUser ? editUser.department : '',
-    position: editUser ? editUser.position : '',
-    role: editUser ? editUser.role : undefined,
-    phone: editUser ? editUser.phone : '',
-  });
+  const [form, setForm] = React.useState<IUser>(
+    editUser || {
+      id: undefined,
+      lastName: '',
+      firstName: '',
+      secondName: '',
+      birthday: moment().format('YYYY-MM-DD'),
+      email: '',
+      gender: 'female',
+      department: '',
+      position: '',
+      role: undefined,
+      phone: '',
+    },
+  );
   const formChangeHandler = (name: string, value: string | unknown): void => {
     if (typeof value === 'string') {
       setForm({ ...form, [name]: value });
@@ -72,7 +87,7 @@ export const UsersModal: FC<Props> = ({
   };
   return (
     <Modal
-      className={classes.modal}
+      className={styles.modal}
       open={open}
       onClose={onClose}
       aria-labelledby="users-modal"
@@ -82,35 +97,34 @@ export const UsersModal: FC<Props> = ({
         <h2>Новый сотрудник</h2>
         <form
           id="users-form"
-          className={styles.root}
           noValidate
           autoComplete="off"
-          // TODO: не устал везде void писать ?) это не обязательно, у тебя вызываемая функция ничего не возрвщает. Ниже тоже самое
+          // TODO: не устал, иначе получаю варнинги, выглядит стремно)
           onSubmit={(event): void => onSubmitHandler(event)}
         >
           <TextField
-            className={classes.form__textInput}
+            className={styles.formControls}
             value={form.lastName}
             onChange={(event): void => formChangeHandler('lastName', event.target.value)}
             label="Фамилия"
             variant="outlined"
           />
           <TextField
-            className={classes.form__textInput}
+            className={styles.formControls}
             value={form.firstName}
             onChange={(event): void => formChangeHandler('firstName', event.target.value)}
             label="Имя"
             variant="outlined"
           />
           <TextField
-            className={classes.form__textInput}
+            className={styles.formControls}
             value={form.secondName}
             onChange={(event): void => formChangeHandler('secondName', event.target.value)}
             label="Отчество"
             variant="outlined"
           />
           <TextField
-            className={classes.form__textInput}
+            className={styles.formControls}
             value={form.email}
             onChange={(event): void => formChangeHandler('email', event.target.value)}
             label="Email"
@@ -121,7 +135,7 @@ export const UsersModal: FC<Props> = ({
             type="date"
             value={form.birthday}
             onChange={(event): void => formChangeHandler('birthday', event.target.value)}
-            className={classes.textField}
+            className={styles.formControlsDate}
             InputLabelProps={{
               shrink: true,
             }}
@@ -129,6 +143,7 @@ export const UsersModal: FC<Props> = ({
           <FormLabel component="legend">Пол</FormLabel>
           <RadioGroup
             id="gender"
+            className={styles.formControls}
             row
             aria-label="gender"
             name="gender"
@@ -138,8 +153,8 @@ export const UsersModal: FC<Props> = ({
             <FormControlLabel value="female" control={<Radio />} label="Female" />
             <FormControlLabel value="male" control={<Radio />} label="Male" />
           </RadioGroup>
-          <FormControl variant="outlined">
-            <InputLabel htmlFor="outlined-age-native-simple">Отдел</InputLabel>
+          <FormControl className={styles.formControls} variant="outlined">
+            <InputLabel className={styles.selectLabel} htmlFor="outlined-age-native-simple">Отдел</InputLabel>
             <Select
               native
               value={form.department}
@@ -153,8 +168,8 @@ export const UsersModal: FC<Props> = ({
               <option value="develop">develop</option>
             </Select>
           </FormControl>
-          <FormControl variant="outlined">
-            <InputLabel htmlFor="outlined-age-native-simple">Должность</InputLabel>
+          <FormControl className={styles.formControls} variant="outlined">
+            <InputLabel className={styles.selectLabel} htmlFor="outlined-age-native-simple">Должность</InputLabel>
             <Select
               native
               value={form.role}
@@ -168,7 +183,7 @@ export const UsersModal: FC<Props> = ({
               <option value="IOS Developer">IOS Developer</option>
             </Select>
           </FormControl>
-          <div className={classes.form__buttons}>
+          <div className={styles.buttons}>
             <Button variant="outlined">Отмена</Button>
             <Button variant="contained" color="primary" type="submit">
               Ок
