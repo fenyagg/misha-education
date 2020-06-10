@@ -7,12 +7,12 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CreateIcon from '@material-ui/icons/Create';
-import { User } from '../../../entries/IUsers';
+import { IUser } from '../../../entries/IUsers';
 
 interface Props {
-  users: User[];
-  onDelete: (user: User) => void;
-  onSave: (form: User) => void;
+  users: IUser[];
+  onDelete: (userId: string) => void;
+  onSave: (form: IUser) => void;
   onEditUser: (form: string) => void;
   className: string;
   children?: never;
@@ -50,7 +50,7 @@ export const UsersTable: FC<Props> = ({
                 <TableCell align="right">
                   <div>
                     <CreateIcon onClick={(): void => openModalHandler(user.id!)} />
-                    <CancelIcon onClick={(): void => onDelete(user)} />
+                    <CancelIcon onClick={(): void => onDelete(user.id!)} />
                   </div>
                 </TableCell>
               </TableRow>
