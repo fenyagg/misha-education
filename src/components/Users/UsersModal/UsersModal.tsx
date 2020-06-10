@@ -99,7 +99,6 @@ export const UsersModal: FC<IUsersModalProps> = ({
           id="users-form"
           noValidate
           autoComplete="off"
-          // TODO: не устал, иначе получаю варнинги, выглядит стремно)
           onSubmit={(event): void => onSubmitHandler(event)}
         >
           <TextField

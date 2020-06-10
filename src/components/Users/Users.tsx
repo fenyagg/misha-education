@@ -36,21 +36,21 @@ export const useStyles = makeStyles({
 
 export const Users: FC<IUserProps> = ({ users, onSave, onDelete }: IUserProps) => {
   const styles = useStyles();
-  const [isModalOpen, setisModalOpen] = React.useState<IModalData>({
+  const [userModal, setuserModal] = React.useState<IModalData>({
     isOpen: false,
     userId: undefined,
   });
   const handleOpen = (): void => {
-    setisModalOpen({ isOpen: true });
+    setuserModal({ isOpen: true });
   };
   const handleClose = (): void => {
-    setisModalOpen({ isOpen: false });
+    setuserModal({ isOpen: false });
   };
   const editUserHandler = (editingUserId: string): void => {
-    setisModalOpen({ isOpen: true, userId: editingUserId });
+    setuserModal({ isOpen: true, userId: editingUserId });
   };
-  const editUser = useMemo(() => users.find((user) => user.id === isModalOpen.userId),
-    [isModalOpen.userId, users]);
+  const editUser = useMemo(() => users.find((user) => user.id === userModal.userId),
+    [userModal.userId, users]);
   return (
     <div className={styles.wrapper}>
       <div className={styles.tableWrapper}>
@@ -65,9 +65,9 @@ export const Users: FC<IUserProps> = ({ users, onSave, onDelete }: IUserProps) =
       <Button variant="contained" color="primary" onClick={handleOpen}>
         Добавить пользователя
       </Button>
-      {isModalOpen.isOpen && (
+      {userModal.isOpen && (
         <UsersModal
-          open={isModalOpen.isOpen}
+          open={userModal.isOpen}
           editUser={editUser}
           onClose={handleClose}
           onSave={onSave}
