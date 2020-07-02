@@ -28,11 +28,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "yarn typescript && yarn lint:ts",
-    "lint:ts": "eslint './src/**/*.{ts,tsx}'",
-    "prettier:ts": "prettier-eslint --list-different $PWD/'src/**/*.{ts,tsx}'; prettier-eslint --write $PWD/'src/**/*.{ts,tsx}'",
-    "typescript": "tsc"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -50,8 +46,10 @@
     ]
   },
   "devDependencies": {
-    "eslint-config-airbnb": "^18.1.0",
-    "eslint-plugin-import": "^2.20.2",
-    "prettier-eslint-cli": "^5.0.0"
+    "@typescript-eslint/eslint-plugin": "^3.5.0",
+    "@typescript-eslint/parser": "^3.5.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.0.5"
   }
 }

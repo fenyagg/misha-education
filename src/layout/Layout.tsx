@@ -17,7 +17,5 @@ export const useStyles = makeStyles({
 
 export const Layout: FC<ILayoutProps> = ({ children }: ILayoutProps) => {
   const styles = useStyles();
-  return (
-    <div className={styles.wrapper}>{children}</div>
-  );
+  return <div className={styles.wrapper}>{children}</div>;
 };
