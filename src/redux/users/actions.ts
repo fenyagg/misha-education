@@ -1,4 +1,4 @@
-import { USER_ADD, USER_EDIT, USER_REMOVE, UserActionTypes } from '../types';
+import { USER_ADD, USER_EDIT, USER_REMOVE, UserActionTypes } from './types';
 import { IUser } from '../../entries/IUsers';
 import { v4 as uuidv4 } from 'uuid';
 
