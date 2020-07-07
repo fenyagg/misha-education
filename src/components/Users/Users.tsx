@@ -5,7 +5,7 @@ import { connect, ConnectedProps } from 'react-redux';
 import { UsersTable } from './UsersTable/UsersTable';
 import { UsersModal } from './UsersModal/UsersModal';
 import { IUser } from '../../entries/IUsers';
-import { addUser, editUser, removeUser } from '../../redux/actions';
+import { addUser, editUser, removeUser } from '../../redux/users/actions';
 
 interface IModalData {
   isOpen: boolean;
