@@ -1,20 +1,35 @@
 import React, { FC, useMemo } from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { IUser } from '../../entries/IUsers';
+import { connect, ConnectedProps } from 'react-redux';
 import { UsersTable } from './UsersTable/UsersTable';
 import { UsersModal } from './UsersModal/UsersModal';
+import { IUserState } from '../../redux/types';
+import { addUser, editUser, removeUser } from '../../redux/actions';
 
-interface IUserProps {
-  users: IUser[];
-  onSave: (user: IUser) => void;
-  onDelete: (userId: string) => void;
-  children?: never;
-}
 interface IModalData {
   isOpen: boolean;
   userId?: string;
 }
+interface RootState {
+  users: IUserState[];
+}
+
+const mapStateToProps = (state: RootState) => ({
+  users: state.users,
+});
+
+const mapDispatchToProps = {
+  removeUser,
+  addUser,
+  editUser,
+};
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type Props = PropsFromRedux;
 export const useStyles = makeStyles({
   wrapper: {
     width: '100%',
@@ -34,7 +49,7 @@ export const useStyles = makeStyles({
   },
 });
 
-export const Users: FC<IUserProps> = ({ users, onSave, onDelete }: IUserProps) => {
+export const Users: FC<Props> = (props: Props) => {
   const styles = useStyles();
   const [userModal, setuserModal] = React.useState<IModalData>({
     isOpen: false,
@@ -46,33 +61,40 @@ export const Users: FC<IUserProps> = ({ users, onSave, onDelete }: IUserProps) =
   const handleClose = (): void => {
     setuserModal({ isOpen: false });
   };
-  const editUserHandler = (editingUserId: string): void => {
+  const editIconClickHandler = (editingUserId: string): void => {
     setuserModal({ isOpen: true, userId: editingUserId });
   };
-  const editUser = useMemo(() => users.find((user) => user.id === userModal.userId),
-    [userModal.userId, users]);
+  const deleteUserHandler = (id: string): void => {
+    props.removeUser(id);
+  };
+  const saveUserHandler = (userFromModal: IUserState): void => {
+    if (userFromModal && userFromModal.id) {
+      props.editUser(userFromModal);
+    } else {
+      props.addUser(userFromModal);
+    }
+  };
+  const editingUser = useMemo(() => props.users.find((user) => user.id === userModal.userId), [
+    userModal.userId,
+    props.users,
+  ]);
   return (
     <div className={styles.wrapper}>
       <div className={styles.tableWrapper}>
         <UsersTable
           className={styles.table}
-          users={users}
-          onDelete={onDelete}
-          onSave={onSave}
-          onEditUser={editUserHandler}
+          users={props.users}
+          onDelete={deleteUserHandler}
+          onEditUser={editIconClickHandler}
         />
       </div>
       <Button variant="contained" color="primary" onClick={handleOpen}>
         Добавить пользователя
       </Button>
       {userModal.isOpen && (
-        <UsersModal
-          open={userModal.isOpen}
-          editUser={editUser}
-          onClose={handleClose}
-          onSave={onSave}
-        />
+        <UsersModal open={userModal.isOpen} editUser={editingUser} onClose={handleClose} onSave={saveUserHandler} />
       )}
     </div>
   );
 };
+export default connector(Users);

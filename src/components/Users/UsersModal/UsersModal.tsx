@@ -56,9 +56,7 @@ export const useStyles = makeStyles({
     },
   },
 });
-export const UsersModal: FC<IUsersModalProps> = ({
-  open, onClose, onSave, editUser,
-}: IUsersModalProps) => {
+export const UsersModal: FC<IUsersModalProps> = ({ open, onClose, onSave, editUser }: IUsersModalProps) => {
   const styles = useStyles();
   const [form, setForm] = React.useState<IUser>(
     editUser || {
@@ -95,12 +93,7 @@ export const UsersModal: FC<IUsersModalProps> = ({
     >
       <div>
         <h2>Новый сотрудник</h2>
-        <form
-          id="users-form"
-          noValidate
-          autoComplete="off"
-          onSubmit={(event): void => onSubmitHandler(event)}
-        >
+        <form id="users-form" noValidate autoComplete="off" onSubmit={(event): void => onSubmitHandler(event)}>
           <TextField
             className={styles.formControls}
             value={form.lastName}
@@ -153,7 +146,9 @@ export const UsersModal: FC<IUsersModalProps> = ({
             <FormControlLabel value="male" control={<Radio />} label="Male" />
           </RadioGroup>
           <FormControl className={styles.formControls} variant="outlined">
-            <InputLabel className={styles.selectLabel} htmlFor="outlined-age-native-simple">Отдел</InputLabel>
+            <InputLabel className={styles.selectLabel} htmlFor="outlined-age-native-simple">
+              Отдел
+            </InputLabel>
             <Select
               native
               value={form.department}
@@ -168,7 +163,9 @@ export const UsersModal: FC<IUsersModalProps> = ({
             </Select>
           </FormControl>
           <FormControl className={styles.formControls} variant="outlined">
-            <InputLabel className={styles.selectLabel} htmlFor="outlined-age-native-simple">Должность</InputLabel>
+            <InputLabel className={styles.selectLabel} htmlFor="outlined-age-native-simple">
+              Должность
+            </InputLabel>
             <Select
               native
               value={form.role}

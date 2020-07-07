@@ -12,14 +12,11 @@ import { IUser } from '../../../entries/IUsers';
 interface Props {
   users: IUser[];
   onDelete: (userId: string) => void;
-  onSave: (form: IUser) => void;
   onEditUser: (form: string) => void;
   className: string;
   children?: never;
 }
-export const UsersTable: FC<Props> = ({
-  users, className, onDelete, onEditUser,
-}: Props) => {
+export const UsersTable: FC<Props> = ({ users, className, onDelete, onEditUser }: Props) => {
   const openModalHandler = (id: string): void => {
     onEditUser(id);
   };
