@@ -1,33 +1,11 @@
-import { IUserState, USER_ADD, USER_EDIT, USER_REMOVE, UserActionTypes } from './types';
+import { USER_ADD, USER_EDIT, USER_REMOVE, UserActionTypes } from './types';
+import { IUser } from '../entries/IUsers';
 import { v4 as uuidv4 } from 'uuid';
 
-export const addUser = ({
-  lastName,
-  firstName,
-  secondName,
-  birthday,
-  email,
-  department,
-  position,
-  phone,
-  role,
-  gender,
-}: IUserState): UserActionTypes => {
+export const addUser = (user: IUser): UserActionTypes => {
   return {
     type: USER_ADD,
-    payload: {
-      id: uuidv4(),
-      lastName,
-      firstName,
-      secondName,
-      birthday,
-      email,
-      department,
-      position,
-      phone,
-      role,
-      gender,
-    },
+    payload: { ...user, id: uuidv4() },
   };
 };
 
@@ -38,21 +16,9 @@ export const removeUser = (id: string): UserActionTypes => {
   };
 };
 
-export const editUser = ({
-  id,
-  lastName,
-  firstName,
-  secondName,
-  birthday,
-  email,
-  department,
-  position,
-  phone,
-  role,
-  gender,
-}: IUserState): UserActionTypes => {
+export const editUser = (user: IUser): UserActionTypes => {
   return {
     type: USER_EDIT,
-    payload: { id, lastName, firstName, secondName, birthday, email, department, position, phone, role, gender },
+    payload: user,
   };
 };

@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
-import { ERole } from '../entries/ERules';
-import { IUserState, USER_ADD, USER_EDIT, USER_REMOVE, UserActionTypes } from './types';
+import { ERole } from '../../entries/ERules';
+import { USER_ADD, USER_EDIT, USER_REMOVE, UserActionTypes } from '../types';
+import { IUser } from '../../entries/IUsers';
 
-export const initialUsersStore: IUserState[] = [
+export const initialUsersStore: IUser[] = [
   {
     id: uuidv4(),
     lastName: 'LastName',
@@ -18,7 +19,7 @@ export const initialUsersStore: IUserState[] = [
   },
 ];
 
-export const usersReducer = (store = initialUsersStore, action: UserActionTypes): IUserState[] => {
+export const usersReducer = (store = initialUsersStore, action: UserActionTypes): IUser[] => {
   switch (action.type) {
     case USER_ADD:
       return store.concat([action.payload]);

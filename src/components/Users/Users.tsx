@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { connect, ConnectedProps } from 'react-redux';
 import { UsersTable } from './UsersTable/UsersTable';
 import { UsersModal } from './UsersModal/UsersModal';
-import { IUserState } from '../../redux/types';
+import { IUser } from '../../entries/IUsers';
 import { addUser, editUser, removeUser } from '../../redux/actions';
 
 interface IModalData {
@@ -12,7 +12,7 @@ interface IModalData {
   userId?: string;
 }
 interface RootState {
-  users: IUserState[];
+  users: IUser[];
 }
 
 const mapStateToProps = (state: RootState) => ({
@@ -67,7 +67,7 @@ export const Users: FC<Props> = (props: Props) => {
   const deleteUserHandler = (id: string): void => {
     props.removeUser(id);
   };
-  const saveUserHandler = (userFromModal: IUserState): void => {
+  const saveUserHandler = (userFromModal: IUser): void => {
     if (userFromModal && userFromModal.id) {
       props.editUser(userFromModal);
     } else {

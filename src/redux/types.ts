@@ -1,18 +1,4 @@
-import { ERole } from '../entries/ERules';
-
-export interface IUserState {
-  id?: string;
-  lastName: string;
-  firstName: string;
-  secondName: string;
-  birthday: string;
-  email: string;
-  department: string;
-  position: string;
-  phone?: string;
-  role?: ERole;
-  gender: string;
-}
+import { IUser } from '../entries/IUsers';
 
 export const USER_ADD = 'USER_ADD';
 export const USER_REMOVE = 'USER_REMOVE';
@@ -20,7 +6,7 @@ export const USER_EDIT = 'USER_EDIT';
 
 interface IAddUserAction {
   type: typeof USER_ADD;
-  payload: IUserState;
+  payload: IUser;
 }
 interface IRemoveUserAction {
   type: typeof USER_REMOVE;
@@ -30,7 +16,7 @@ interface IRemoveUserAction {
 }
 interface IEditUserAction {
   type: typeof USER_EDIT;
-  payload: IUserState;
+  payload: IUser;
 }
 
 export type UserActionTypes = IAddUserAction | IRemoveUserAction | IEditUserAction;
