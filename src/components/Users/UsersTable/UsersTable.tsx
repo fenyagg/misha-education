@@ -7,23 +7,16 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CreateIcon from '@material-ui/icons/Create';
-import { IUser } from '../../../entries/IUsers';
+import { useStore } from '../../../helpers/use-store';
+import { useObserver } from 'mobx-react-lite';
 
 interface Props {
-  users: IUser[];
-  onDelete: (userId: string) => void;
-  onSave: (form: IUser) => void;
-  onEditUser: (form: string) => void;
   className: string;
   children?: never;
 }
-export const UsersTable: FC<Props> = ({
-  users, className, onDelete, onEditUser,
-}: Props) => {
-  const openModalHandler = (id: string): void => {
-    onEditUser(id);
-  };
-  return (
+export const UsersTable: FC<Props> = ({ className }: Props) => {
+  const store = useStore();
+  return useObserver(() => (
     <div>
       <TableContainer>
         <Table className={className} size="small" aria-label="a dense table">
@@ -38,8 +31,8 @@ export const UsersTable: FC<Props> = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id!}>
+            {store.userStore.users.map((user) => (
+              <TableRow key={user.id}>
                 <TableCell component="th" scope="row">
                   {`${user.lastName} ${user.firstName} ${user.secondName}`}
                 </TableCell>
@@ -49,8 +42,8 @@ export const UsersTable: FC<Props> = ({
                 <TableCell>{user.role}</TableCell>
                 <TableCell align="right">
                   <div>
-                    <CreateIcon onClick={(): void => openModalHandler(user.id!)} />
-                    <CancelIcon onClick={(): void => onDelete(user.id!)} />
+                    <CreateIcon onClick={(): void => store.usersModal.editUser(user.id!)} />
+                    <CancelIcon onClick={(): void => store.userStore.removeUser(user.id!)} />
                   </div>
                 </TableCell>
               </TableRow>
@@ -59,5 +52,5 @@ export const UsersTable: FC<Props> = ({
         </Table>
       </TableContainer>
     </div>
-  );
+  ));
 };

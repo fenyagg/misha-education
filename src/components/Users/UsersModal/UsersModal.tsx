@@ -1,7 +1,8 @@
-import React, { FC, FormEvent } from 'react';
+import React, { FC, FormEvent, useMemo } from 'react';
 import Modal from '@material-ui/core/Modal';
 import TextField from '@material-ui/core/TextField';
 import moment from 'moment';
+import { v4 as uuidv4 } from 'uuid';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -12,12 +13,9 @@ import Select from '@material-ui/core/Select';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import { IUser } from '../../../entries/IUsers';
+import { useStore } from '../../../helpers/use-store';
 
 interface IUsersModalProps {
-  open: boolean;
-  onClose: () => void;
-  onSave: (form: IUser) => void;
-  editUser?: IUser;
   children?: never;
 }
 export const useStyles = makeStyles({
@@ -56,10 +54,12 @@ export const useStyles = makeStyles({
     },
   },
 });
-export const UsersModal: FC<IUsersModalProps> = ({
-  open, onClose, onSave, editUser,
-}: IUsersModalProps) => {
+export const UsersModal: FC<IUsersModalProps> = () => {
   const styles = useStyles();
+  const store = useStore();
+  const users = store.userStore.users;
+  const editUserId = store.usersModal.editUserId;
+  const editUser = useMemo(() => users.find((user) => user.id === editUserId), [editUserId, users]);
   const [form, setForm] = React.useState<IUser>(
     editUser || {
       id: undefined,
@@ -82,25 +82,24 @@ export const UsersModal: FC<IUsersModalProps> = ({
   };
   const onSubmitHandler = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
-    onSave(form);
-    onClose();
+    if (form.id) {
+      store.userStore.editUser(form);
+    } else {
+      store.userStore.addUser({ ...form, id: uuidv4() });
+    }
+    store.usersModal.close();
   };
   return (
     <Modal
       className={styles.modal}
-      open={open}
-      onClose={onClose}
+      open={store.usersModal.isOpen}
+      onClose={store.usersModal.close}
       aria-labelledby="users-modal"
       aria-describedby="simple-modal-description"
     >
       <div>
         <h2>Новый сотрудник</h2>
-        <form
-          id="users-form"
-          noValidate
-          autoComplete="off"
-          onSubmit={(event): void => onSubmitHandler(event)}
-        >
+        <form id="users-form" noValidate autoComplete="off" onSubmit={(event): void => onSubmitHandler(event)}>
           <TextField
             className={styles.formControls}
             value={form.lastName}
@@ -153,7 +152,9 @@ export const UsersModal: FC<IUsersModalProps> = ({
             <FormControlLabel value="male" control={<Radio />} label="Male" />
           </RadioGroup>
           <FormControl className={styles.formControls} variant="outlined">
-            <InputLabel className={styles.selectLabel} htmlFor="outlined-age-native-simple">Отдел</InputLabel>
+            <InputLabel className={styles.selectLabel} htmlFor="outlined-age-native-simple">
+              Отдел
+            </InputLabel>
             <Select
               native
               value={form.department}
@@ -168,7 +169,9 @@ export const UsersModal: FC<IUsersModalProps> = ({
             </Select>
           </FormControl>
           <FormControl className={styles.formControls} variant="outlined">
-            <InputLabel className={styles.selectLabel} htmlFor="outlined-age-native-simple">Должность</InputLabel>
+            <InputLabel className={styles.selectLabel} htmlFor="outlined-age-native-simple">
+              Должность
+            </InputLabel>
             <Select
               native
               value={form.role}
@@ -183,7 +186,9 @@ export const UsersModal: FC<IUsersModalProps> = ({
             </Select>
           </FormControl>
           <div className={styles.buttons}>
-            <Button variant="outlined">Отмена</Button>
+            <Button variant="outlined" onClick={store.usersModal.close}>
+              Отмена
+            </Button>
             <Button variant="contained" color="primary" type="submit">
               Ок
             </Button>

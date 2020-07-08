@@ -1,20 +1,16 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { IUser } from '../../entries/IUsers';
 import { UsersTable } from './UsersTable/UsersTable';
 import { UsersModal } from './UsersModal/UsersModal';
+import { useStore } from '../../helpers/use-store';
+import { useObserver } from 'mobx-react-lite';
+import 'mobx-react-lite/batchingForReactDom';
 
 interface IUserProps {
-  users: IUser[];
-  onSave: (user: IUser) => void;
-  onDelete: (userId: string) => void;
   children?: never;
 }
-interface IModalData {
-  isOpen: boolean;
-  userId?: string;
-}
+
 export const useStyles = makeStyles({
   wrapper: {
     width: '100%',
@@ -34,45 +30,18 @@ export const useStyles = makeStyles({
   },
 });
 
-export const Users: FC<IUserProps> = ({ users, onSave, onDelete }: IUserProps) => {
+export const Users: FC<IUserProps> = () => {
   const styles = useStyles();
-  const [userModal, setuserModal] = React.useState<IModalData>({
-    isOpen: false,
-    userId: undefined,
-  });
-  const handleOpen = (): void => {
-    setuserModal({ isOpen: true });
-  };
-  const handleClose = (): void => {
-    setuserModal({ isOpen: false });
-  };
-  const editUserHandler = (editingUserId: string): void => {
-    setuserModal({ isOpen: true, userId: editingUserId });
-  };
-  const editUser = useMemo(() => users.find((user) => user.id === userModal.userId),
-    [userModal.userId, users]);
-  return (
+  const store = useStore();
+  return useObserver(() => (
     <div className={styles.wrapper}>
       <div className={styles.tableWrapper}>
-        <UsersTable
-          className={styles.table}
-          users={users}
-          onDelete={onDelete}
-          onSave={onSave}
-          onEditUser={editUserHandler}
-        />
+        <UsersTable className={styles.table} />
       </div>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
+      <Button variant="contained" color="primary" onClick={store.usersModal.addUser}>
         Добавить пользователя
       </Button>
-      {userModal.isOpen && (
-        <UsersModal
-          open={userModal.isOpen}
-          editUser={editUser}
-          onClose={handleClose}
-          onSave={onSave}
-        />
-      )}
+      {store.usersModal.isOpen && <UsersModal />}
     </div>
-  );
+  ));
 };
